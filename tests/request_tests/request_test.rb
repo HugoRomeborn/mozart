@@ -21,6 +21,6 @@ class RequestTest < Minitest::Test
     request_string = File.read('../get-index.request.txt')
     request = Request.new(request_string)
 
-    assert_equal '/', request.host
+    assert_equal 'developer.mozilla.org', request.header[:Host]
   end
 end
