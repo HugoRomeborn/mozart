@@ -1,5 +1,6 @@
 require 'debug'
 
+
 class Request
   attr_reader :header, :params, :method, :resource, :version
   def initialize(request)
