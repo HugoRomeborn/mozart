@@ -1,10 +1,14 @@
+require 'slim'
+
 require_relative 'tcp_server'
 
 r = Router.new
 
 
 r.get('/hello') do
-  return 1 + 2
+  @senap = "sdsfdfsdf"
+  Slim::Template.new('views/index.slim').render({wat: "woot"})
+  #File.read("./index.html")
 end
 
 
