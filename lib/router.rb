@@ -15,5 +15,16 @@ class Router
   def add_route(method, route, blk)
     @routes << {method: method, route: route, block: blk}
   end
+
+  def match(request)
+    @routes.each do |route|
+      if route[:method] == request.method
+        if route[:route] == request.resource
+          return route
+        end
+      end
+    end
+    false
+  end
 end
 

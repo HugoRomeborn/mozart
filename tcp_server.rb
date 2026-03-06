@@ -8,8 +8,8 @@ class HTTPServer
   def initialize(port, router)
     @port = port
 
-    @routes = router.routes
-    @responder = Response.new(router.routes)
+    @router = router
+    @responder = Responder.new()
   end
 
   def start
@@ -18,15 +18,25 @@ class HTTPServer
 
     while session = server.accept
       data = receive_request(session)
-
-      request = Request.new(data)
-      
-
+      case data
+      when nil
+      else
+        request = Request.new(data)
         
 
-      response  = @responder.respond(request)
 
-      session.print response
+        match = router.match(request)
+
+        if match 
+          html = match[block].call
+        elsif file_exists?()
+          
+        else
+          404!
+          response  = @responder.respond(request)
+        end
+        session.print response
+      end
       session.close
     end
   end
@@ -46,3 +56,7 @@ class HTTPServer
 
 end
 
+def file_exists?(resource)
+  Dir.chdir("public")
+  content
+end
