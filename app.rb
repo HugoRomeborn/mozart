@@ -7,9 +7,7 @@ r = Router.new
 
 r.get('/hello') do
   @senap = "sdsfdfsdf"
-  template = Slim::Template.new('views/index.slim')
-  template.render(self, wat: "woot")
-  #File.read("./index.html")
+  slim('views/index.slim', self)
 end
 
 r.get('/world') do
