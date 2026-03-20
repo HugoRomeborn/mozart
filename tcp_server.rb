@@ -1,7 +1,6 @@
 require 'socket'
 require_relative 'lib/request'
 require_relative 'lib/router'
-require_relative 'lib/response'
 
 class HTTPServer
 
@@ -9,7 +8,6 @@ class HTTPServer
     @port = port
 
     @router = router
-    @responder = Responder.new()
   end
 
   def start
@@ -24,39 +22,40 @@ class HTTPServer
         request = Request.new(data)
         
 
-
         match = @router.match(request)
+        params = {}
+        params.merge!(request.params)
+        
         if match 
-          body = match[:block].call
+
+          p match[:params] != nil
+          if match[:params] != nil
+            params.merge!(match[:params])
+          end
+          p params
+          body = match[:block].call (params)
           message = 200
           content_type = "text/html"
-        elsif File.exist?("public#{request.resource}")
-          
+
+        elsif request.resource != "/" && File.exist?("public#{request.resource}")
+          body = File.binread("public#{request.resource}")
           message = 200
           case request.resource.split(".")[-1] 
           when "css"
-            body = File.read("public#{request.resource}")
             content_type = "text/css"
           when "html"
-            body = File.read("public#{request.resource}")
             content_type = "text/html"
           when "png"
-            body = File.binread("public#{request.resource}")
             content_type = "image/png"
           when "jpeg"
-            body = File.binread("public#{request.resource}")
             content_type = "image/jpeg"
           when "jpg"
-            body = File.binread("public#{request.resource}")
             content_type = "image/jpeg"
           when "js"
-            body = File.read("public#{request.resource}")
             content_type = "text/javascript"
           when "pdf"
-            body = File.binread("public#{request.resource}")
             content_type = "application/pdf"
           else
-            body = File.read("public#{request.resource}")
             content_type = "text/plain"
           end
         else
@@ -90,9 +89,17 @@ class HTTPServer
     end
     return "#{version} #{message}\r\nContent-Type: #{content_type}\r\n\r\n#{body}\r\n\r\n"
   end
+
+  
 end
 
 def slim(path, object = Object.new)
-  template = Slim::Template.new(path)
-  template.render(object, wat: "woot")
+  template = Slim::Template.new("views/#{path}.slim")
+  doc = template.render(object, wat: "woot")
+  if File.exist?("views/layout.slim")
+    template = Slim::Template.new("views/layout.slim")
+    layout = template.render(object, wat: "woot")
+    doc =layout.gsub("==yield", doc)
+  end
+  doc
 end

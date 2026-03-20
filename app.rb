@@ -5,12 +5,12 @@ require_relative 'tcp_server'
 r = Router.new
 
 
-r.get('/hello') do
-  @senap = "sdsfdfsdf"
-  slim('views/index.slim', self)
+r.get('/hello/:test') do |params|
+  @senap = params[":test"]
+  slim('index', self)
 end
 
-r.get('/world') do
+r.get('/ghj') do
   
 end
 
