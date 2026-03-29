@@ -15,31 +15,63 @@ class Router
 
   def add_route(method, route, blk)
     route = route.split("/")   
-    @routes << {method: method, route: route, block: blk}
+    route_array = []
+    route.each do |part|
+      route_array << {name: part, dynamic: (part[0] == ":")}
+    end
+    @routes << {method: method, route: route_array, block: blk}
   end
 
   def match(request)
-    @routes.each do |route|
-      p route[:method]
-      p request.method
-      if route[:method] == request.method
-        p route[:route]
-        p request.resource.split("/")
-        if route[:route][1] == request.resource.split("/")[1]
-          p "steg 1"
-          if request.resource.split("/").length == route[:route].length
-            p "steg 2"
+    if request.class == Request
+      @routes.each do |route|
+        if route[:method] == request.method
+          request_resource = request.resource.split("/")
+          if route[:route].length == request_resource.length
+            is_correct = true
             route[:params] = {}
-            if request.resource.split("/").length > 2 && route[:route].length > 2 && route[:route].join.include?(":")
-              p "här är params i url"
-              route[:params][route[:route][2]] = request.resource.split("/")[2]
+            (0..(route[:route].length - 1)).each do |i|
+              if route[:route][i][:dynamic]
+                symbol = route[:route][i][:name].delete(":").to_sym
+                route[:params][symbol] = request_resource[i]
+              else
+                if route[:route][i][:name] != request_resource[i]
+                  is_correct = false
+                end
+              end
             end
-            p route
-            return route
+            if is_correct
+              return route
+            end
+          end
+        end
+      end
+    elsif request.class == Hash
+      @routes.each do |route|
+        if route[:method] == request[:method]
+          request_resource = request[:resource].split("/")
+          if route[:route].length == request_resource.length
+            is_correct = true
+            route[:params] = {}
+            (0..(route[:route].length - 1)).each do |i|
+              if route[:route][i][:dynamic]
+                symbol = route[:route][i][:name].delete(":").to_sym
+                route[:params][symbol] = request_resource[i]
+              else
+                if route[:route][i][:name] != request_resource[i]
+                  is_correct = false
+                end
+              end
+            end
+            if is_correct
+              return route
+            end
           end
         end
       end
     end
     false
   end
+
+  
 end

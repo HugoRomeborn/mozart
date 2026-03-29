@@ -3,7 +3,7 @@ require_relative 'lib/request'
 require_relative 'lib/router'
 
 class HTTPServer
-
+  attr_reader :router
   def initialize(port, router)
     @port = port
 
@@ -28,13 +28,19 @@ class HTTPServer
         
         if match 
 
-          p match[:params] != nil
           if match[:params] != nil
             params.merge!(match[:params])
           end
+          
           p params
-          body = match[:block].call (params)
-          message = 200
+          body = match[:block].call(params)
+          if body.class == Hash
+            message = body[:message]
+            body = body[:resource]
+
+          else
+            message = 200
+          end
           content_type = "text/html"
 
         elsif request.resource != "/" && File.exist?("public#{request.resource}")
@@ -86,10 +92,15 @@ class HTTPServer
   def create_response(version, message, content_type = nil, body = nil)
     if message == 404
       return "#{version} #{message}\r\n\r\n"
+    elsif message == 303
+      return "#{version} #{message} See Other\r\nLocation: #{body}\r\nContent-Type: #{content_type}\r\n\r\n"
     end
     return "#{version} #{message}\r\nContent-Type: #{content_type}\r\n\r\n#{body}\r\n\r\n"
   end
 
+  def redirect(resource)
+    return {resource: resource, message: 303}
+  end
   
 end
 
@@ -103,3 +114,4 @@ def slim(path, object = Object.new)
   end
   doc
 end
+

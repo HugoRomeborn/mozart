@@ -1,4 +1,3 @@
-require 'debug'
 
 
 class Request
@@ -53,6 +52,7 @@ class Request
       end
       param.to_h
       @params.merge!(param)
+      p @params
     end
   end
 end
