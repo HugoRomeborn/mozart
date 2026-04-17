@@ -1,6 +1,7 @@
 require 'socket'
 require_relative 'lib/request'
 require_relative 'lib/router'
+require 'debug'
 
 class HTTPServer
   attr_reader :router
@@ -21,7 +22,6 @@ class HTTPServer
       else
         request = Request.new(data)
         
-
         match = @router.match(request)
         params = {}
         params.merge!(request.params)
@@ -31,8 +31,7 @@ class HTTPServer
           if match[:params] != nil
             params.merge!(match[:params])
           end
-          
-          p params
+
           body = match[:block].call(params)
           if body.class == Hash
             message = body[:message]
@@ -75,18 +74,28 @@ class HTTPServer
     end
   end
   
-  def receive_request(session)
-      data = ''
-      while line = session.gets and line !~ /^\s*$/
-        data += line
-      end
 
-      puts "RECEIVED REQUEST"
-      puts '-' * 40
-      puts data
-      puts '-' * 40
-      return data
+  def receive_request(session)
+  data = ''
+
+  while line = session.gets and line !~ /^\s*$/
+    data += line
   end
+  request = Request.new(data)
+
+  if request.header["Content-Length"]
+    length = request.header["Content-Length"].to_i
+    body = session.read(length)   
+    data += "\r\n" + body         
+  end
+  
+  puts "RECIEVED REQUEST"
+  puts '-' * 40
+  puts data
+  puts '-' * 40
+
+  return data
+end
 
 
   def create_response(version, message, content_type = nil, body = nil)
@@ -98,10 +107,12 @@ class HTTPServer
     return "#{version} #{message}\r\nContent-Type: #{content_type}\r\n\r\n#{body}\r\n\r\n"
   end
 
-  def redirect(resource)
-    return {resource: resource, message: 303}
-  end
   
+  
+end
+
+def redirect(resource)
+  return {resource: resource, message: 303}
 end
 
 def slim(path, object = Object.new)
@@ -114,4 +125,3 @@ def slim(path, object = Object.new)
   end
   doc
 end
-

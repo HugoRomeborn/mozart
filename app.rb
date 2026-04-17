@@ -16,7 +16,6 @@ r.get('/ghj') do |params|
 end
 
 r.post('/hek') do |params|
-  p params
   redirect("/ghj")
 end
 

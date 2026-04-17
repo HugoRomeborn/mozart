@@ -41,7 +41,6 @@ class Request
       line = line.split(",")
       @header[key.strip] = ( line.length == 1 ? line[0].strip : line.each{|x| x.strip!})
     end
-
     if body != nil
       param = {}
       body.strip!
