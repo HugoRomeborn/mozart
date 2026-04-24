@@ -1,7 +1,9 @@
 require 'socket'
 require_relative 'lib/request'
 require_relative 'lib/router'
+require_relative 'lib/response'
 require 'debug'
+
 
 class HTTPServer
   attr_reader :router
@@ -26,49 +28,9 @@ class HTTPServer
         params = {}
         params.merge!(request.params)
         
-        if match 
-
-          if match[:params] != nil
-            params.merge!(match[:params])
-          end
-
-          body = match[:block].call(params)
-          if body.class == Hash
-            message = body[:message]
-            body = body[:resource]
-
-          else
-            message = 200
-          end
-          content_type = "text/html"
-
-        elsif request.resource != "/" && File.exist?("public#{request.resource}")
-          body = File.binread("public#{request.resource}")
-          message = 200
-          case request.resource.split(".")[-1] 
-          when "css"
-            content_type = "text/css"
-          when "html"
-            content_type = "text/html"
-          when "png"
-            content_type = "image/png"
-          when "jpeg"
-            content_type = "image/jpeg"
-          when "jpg"
-            content_type = "image/jpeg"
-          when "js"
-            content_type = "text/javascript"
-          when "pdf"
-            content_type = "application/pdf"
-          else
-            content_type = "text/plain"
-          end
-        else
-          message = 404
-          body = nil
-          content_type = nil
-        end
-        session.print create_response(request.version, message, content_type, body)
+        response = Response.new(match, params, request)
+        puts response.write_message
+        session.print response.write_message
       end
       session.close
     end
@@ -76,26 +38,26 @@ class HTTPServer
   
 
   def receive_request(session)
-  data = ''
+    data = ''
 
-  while line = session.gets and line !~ /^\s*$/
-    data += line
+    while line = session.gets and line !~ /^\s*$/
+      data += line
+    end
+    request = Request.new(data)
+
+    if request.header["Content-Length"]
+      length = request.header["Content-Length"].to_i
+      body = session.read(length)   
+      data += "\r\n" + body         
+    end
+    
+    puts "RECIEVED REQUEST"
+    puts '-' * 40
+    puts data
+    puts '-' * 40
+
+    return data
   end
-  request = Request.new(data)
-
-  if request.header["Content-Length"]
-    length = request.header["Content-Length"].to_i
-    body = session.read(length)   
-    data += "\r\n" + body         
-  end
-  
-  puts "RECIEVED REQUEST"
-  puts '-' * 40
-  puts data
-  puts '-' * 40
-
-  return data
-end
 
 
   def create_response(version, message, content_type = nil, body = nil)
