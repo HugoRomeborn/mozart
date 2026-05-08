@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: HTTPServer
+  
+    &mdash; Documentation by YARD 0.9.43
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+
+  <link rel="stylesheet" href="css/common.css" type="text/css">
+
+<script type="text/javascript">
+  pathId = "HTTPServer";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/custom.js"></script>
+
+
+  </head>
+  <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index (H)</a> &raquo;
+    
+    
+    <span class="title">HTTPServer</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: HTTPServer
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">HTTPServer</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>tcp_server.rb
+</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>A minimal HTTP/1.1 server built on top of Ruby's <code>TCPServer</code>.</p>
+<p>Accepts incoming TCP connections in a blocking loop, reads the full HTTP
+request (including body when a <code>Content-Length</code> header is present), dispatches
+it through the provided <span class='object_link'><a href="Router.html" title="Router (class)">Router</a></span>, and writes the <span class='object_link'><a href="Response.html" title="Response (class)">Response</a></span> back to the client.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h4 class="tag_title">Examples:</h4>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_router'>router</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Router.html" title="Router (class)">Router</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Router.html#initialize-instance_method" title="Router#initialize (method)">new</a></span></span>
+<span class='id identifier rubyid_router'>router</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__params'>_params</span><span class='op'>|</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;h1&gt;Hello&lt;/h1&gt;</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span>
+
+<span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='const'>HTTPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="#initialize-instance_method" title="HTTPServer#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='int'>4567</span><span class='comma'>,</span> <span class='id identifier rubyid_router'>router</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_start'>start</span></code></pre>
+    
+  </div>
+
+
+
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#router-instance_method" title="#router (instance method)">#<strong>router</strong>  &#x21d2; Router </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The router used to match incoming requests to handler blocks.</p></div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(port, router)  &#x21d2; HTTPServer </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Creates a new HTTPServer.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start-instance_method" title="#start (instance method)">#<strong>start</strong>  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Starts the server and enters the accept loop.</p></div></span>
+  
+</li>
+
+      
+    </ul>
+    
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(port, router)  &#x21d2; <tt><span class='object_link'><a href="" title="HTTPServer (class)">HTTPServer</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Creates a new HTTPServer.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>port</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the TCP port to listen on</p></div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>router</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Router.html" title="Router (class)">Router</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the router that maps requests to handler blocks</p></div>
+      
+    </li>
+  
+</ul>
+
+
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33
+34</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'tcp_server.rb', line 31</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_router'>router</span><span class='rparen'>)</span>
+  <span class='ivar'>@port</span>   <span class='op'>=</span> <span class='id identifier rubyid_port'>port</span>
+  <span class='ivar'>@router</span> <span class='op'>=</span> <span class='id identifier rubyid_router'>router</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="router-instance_method">
+  
+    #<strong>router</strong>  &#x21d2; <tt><span class='object_link'><a href="Router.html" title="Router (class)">Router</a></span></tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns the router used to match incoming requests to handler blocks.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Router.html" title="Router (class)">Router</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the router used to match incoming requests to handler blocks</p></div>
+      
+    </li>
+  
+</ul>
+
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+25
+26
+27</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'tcp_server.rb', line 25</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_router'>router</span>
+  <span class='ivar'>@router</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="start-instance_method">
+  
+    #<strong>start</strong>  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p><p>Starts the server and enters the accept loop.</p>
+<p>Blocks indefinitely, handling one request per connection.  For each
+accepted connection the method:</p>
+<ol>
+<li>Reads the raw HTTP data via <span class='object_link'>#receive_request</span></li>
+<li>Parses it into a <span class='object_link'><a href="Request.html" title="Request (class)">Request</a></span></li>
+<li>Finds a matching route via <span class='object_link'><a href="Router.html#match-instance_method" title="Router#match (method)">Router#match</a></span></li>
+<li>Builds a <span class='object_link'><a href="Response.html" title="Response (class)">Response</a></span> and writes it back to the socket</li>
+</ol>
+
+  </div>
+</div>
+<div class="tags">
+  
+
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'tcp_server.rb', line 46</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_start'>start</span>
+  <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='const'>TCPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@port</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Listening on </span><span class='embexpr_beg'>#{</span><span class='ivar'>@port</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+ 
+  <span class='kw'>while</span> <span class='id identifier rubyid_session'>session</span> <span class='op'>=</span> <span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_accept'>accept</span>
+    <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_receive_request'>receive_request</span><span class='lparen'>(</span><span class='id identifier rubyid_session'>session</span><span class='rparen'>)</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_data'>data</span>
+    <span class='kw'>when</span> <span class='kw'>nil</span>
+      <span class='comment'># nothing to do – empty request
+</span>    <span class='kw'>else</span>
+      <span class='id identifier rubyid_request'>request</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Request.html" title="Request (class)">Request</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Request.html#initialize-instance_method" title="Request#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+ 
+      <span class='id identifier rubyid_match'>match</span>  <span class='op'>=</span> <span class='ivar'>@router</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+      <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='period'>.</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+ 
+      <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Response.html" title="Response (class)">Response</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Response.html#initialize-instance_method" title="Response#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_match'>match</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_session'>session</span><span class='period'>.</span><span class='id identifier rubyid_print'>print</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_write_message'>write_message</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_session'>session</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Fri May  8 15:13:49 2026 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.43 (ruby-3.3.4).
+</div>
+
+    </div>
+  </body>
+</html>
